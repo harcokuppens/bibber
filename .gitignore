@@ -1,0 +1,10 @@
+*.pbc
+*.bc
+Clean\ System\ Files
+*-www
+HelloWorld
+*.prj
+.vscode
+itasks-*.tar.gz
+nitrile-packages
+bin

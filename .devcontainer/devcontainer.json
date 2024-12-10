@@ -1,0 +1,5 @@
+{
+	"image": "cleanlang/devcontainer:latest",
+	"customizations": {"vscode": {"extensions": ["TOPSoftware.clean-vs-code", "eamodio.gitlens"]}},
+	"onCreateCommand": "/onStartup.sh"
+}
