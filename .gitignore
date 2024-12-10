@@ -8,3 +8,4 @@ HelloWorld
 itasks-*.tar.gz
 nitrile-packages
 bin
+.DS_Store
