@@ -1,0 +1,58 @@
+{
+  "packages": {
+    "linux-x64": [
+      {
+        "name": "abc-interpreter",
+        "version": "1.6.0"
+      },
+      {
+        "name": "argenv",
+        "version": "1.0.3"
+      },
+      {
+        "name": "base",
+        "version": "3.0.0"
+      },
+      {
+        "name": "base-clm",
+        "version": "1.6.0"
+      },
+      {
+        "name": "base-code-generator",
+        "version": "2.4.0"
+      },
+      {
+        "name": "base-compiler",
+        "version": "4.0.1"
+      },
+      {
+        "name": "base-lib",
+        "version": "2.12.0"
+      },
+      {
+        "name": "base-rts",
+        "version": "3.0.2"
+      },
+      {
+        "name": "base-stdenv",
+        "version": "2.1.1"
+      },
+      {
+        "name": "base64",
+        "version": "1.0.5"
+      },
+      {
+        "name": "category-theory",
+        "version": "1.2.0"
+      },
+      {
+        "name": "containers",
+        "version": "2.4.0"
+      },
+      {
+        "name": "graph-copy",
+        "version": "3.0.5"
+      }
+    ]
+  }
+}

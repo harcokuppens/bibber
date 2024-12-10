@@ -1,0 +1,41 @@
+format_version: 0.4.22
+name: bibber
+url: https://gitlab.com/top-software/itasks-template/
+maintainer: TOP Software Technology
+contact_email: support@top-software.nl
+description: A clean template project which contains an environment to develop console clean applications.
+license: BSD-2-Clause
+version: 1.0.0
+type: Application
+src:
+  - src
+  - src/WrapDebug
+dependencies:
+  base: ^3
+#  itasks: ^0.16.0
+  argenv: ^1.0.3
+  abc-interpreter: ^1.6.0
+  # system: ^2.2.3
+package:
+  extra_files:
+    - CHANGELOG.md
+    - LICENSE
+    - README.md
+clm_options:
+  compiler: cocl
+  #fusion: GenericFusion
+build:
+  application:
+    script:
+      - clm:
+          src: [src]
+          main: bibber
+          target: bin/bibber
+          # bytecode: prelinked
+          # heap: 20m
+          # generate_descriptors: true
+          # export_local_labels: true
+          # strip: false
+tests:
+  compilation:
+    compilation: {}

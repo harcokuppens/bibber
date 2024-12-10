@@ -1,0 +1,14 @@
+compiler: cocl
+paths:
+  - src
+  - src/WrapDebug
+  - nitrile-packages/linux-x64/abc-interpreter/lib
+  - nitrile-packages/linux-x64/argenv/lib
+  - nitrile-packages/linux-x64/base-lib/lib
+  - nitrile-packages/linux-x64/base-rts/lib
+  - nitrile-packages/linux-x64/base-stdenv/lib
+  - nitrile-packages/linux-x64/base64/lib
+  - nitrile-packages/linux-x64/category-theory/lib
+  - nitrile-packages/linux-x64/containers/lib
+  - nitrile-packages/linux-x64/graph-copy/lib
+  
