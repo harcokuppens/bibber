@@ -1,5 +1,19 @@
 {
-	"image": "cleanlang/devcontainer:latest",
-	"customizations": {"vscode": {"extensions": ["TOPSoftware.clean-vs-code", "eamodio.gitlens"]}},
+	"image": "cleanlang/devcontainer:latest", //  bookwork (latest is 0.4.24 which is 0.4.24-1)
+	//"image": "cleanlang/devcontainer:0.4.9-0", // bullseye  // problem with clm running! 
+	//  -> clm comes from nitrile and somehow nitrile does install binaries build with newer glibc 
+	//     then which is installed on bullseye!
+    //  -> we have 0.4.24-0 and 0.4.24-1 where 0 should specify bullseye and 1 bookwork
+    //     however it seems all later versions > 0.4.9  also have 0 as bookwork? => no bullseye available
+	//"image": "cleanlang/devcontainer:0.4.24-0", // bookwork (0.4.24-0 is same as latest but should then be on bullseye -> is also on bookwork -> bug?? )
+    // => to build clean programs on bullseye I instead use clean from https://clean.cs.ru.nl and build it with its clm which works fine on bullseye 
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"TOPSoftware.clean-vs-code",
+				"eamodio.gitlens"
+			]
+		}
+	},
 	"onCreateCommand": "/onStartup.sh"
 }

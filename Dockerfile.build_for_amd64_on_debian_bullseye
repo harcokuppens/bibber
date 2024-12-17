@@ -1,0 +1,43 @@
+# Usage 
+#
+#    export DOCKERFILE=Dockerfile.build_for_amd64_on_debian_bullseye
+#    docker build -f "$DOCKERFILE" --target dist --output dist/ .
+#
+# explantation:
+# - The --output dist/ option extracts the contents of the dist stage (i.e., the binary) to a directory named dist/ on your host machine.
+# where (see below)
+# - The build stage compiles the application and places the binary in /build/bin/myapp.
+# - The dist stage copies this binary from /build/bin/ in the build stage to the root directory of the dist stage.
+#
+#
+# Stage 1: Build stage
+FROM --platform=linux/amd64 debian:bullseye-slim AS build
+WORKDIR /build
+ENV WORKDIR=/build
+
+RUN apt-get update && apt-get -y install unzip wget make gcc
+
+# install clean 3.1 in clean/ subdir
+RUN wget https://ftp.cs.ru.nl/Clean/Clean31/linux/clean3.1_64.tar.gz 
+RUN tar xzvf clean3.1_64.tar.gz && rm clean3.1_64.tar.gz
+RUN make -C clean
+
+# only for interactive use
+#RUN echo 'export PATH="$PATH:'$PWD'/clean/bin/:'$PWD'/clean/exe/"' >> /etc/bash.bashrc
+ENV PATH="${WORKDIR}/clean/bin:${PATH}"
+
+# copy clean source files and bash build scripts 
+COPY src src 
+COPY build-clm.bash clean.bash .
+
+# build clean program with clm
+RUN ./build-clm.bash 
+
+## Stage 2: Distribution stage
+FROM scratch AS dist
+## scratch: This is an empty base image, essentially a blank slate with nothing pre-installed.
+## copy result binary of build to root of empty scratch image
+##   -> with '--output dist/' option for 'docker build' can copy the scratch
+##      image contents to the docker host dir 'dist/' to get the binary result 
+##      on the host
+COPY --from=build /build/bin/ /
