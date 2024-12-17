@@ -15,9 +15,9 @@ write_string i s file
 
 write_entries_as_html :: [(Int,String,String, [(String,[String])] )] *File -> *File;
 write_entries_as_html entries file
-	# file = fwrites "<body>\n" file;
+//	# file = fwrites "<body>\n" file;
 	# file = write_entries entries file;
-	# file = fwrites "</body>\n" file;
+//	# file = fwrites "</body>\n" file;
 	= file;
 
 //--------------------------------------------------------------------------------------
@@ -26,9 +26,9 @@ write_entries_as_html entries file
 
 write_entries_as_html_sorted_by_field :: ([String] -> [String]) (String [(String,[String])] -> String)  String [(Int,String,String, [(String,[String])] )] *File -> *File;
 write_entries_as_html_sorted_by_field sortfunc get_field_value fieldname entries file
-	# file = fwrites "<body>\n" file;
-  # file = write_entries_sorted_by_field sortfunc get_field_value  fieldname entries file
-	# file = fwrites "</body>\n" file;
+//	# file = fwrites "<body>\n" file;
+	# file = write_entries_sorted_by_field sortfunc get_field_value  fieldname entries file
+//	# file = fwrites "</body>\n" file;
 	= file;
 
 
