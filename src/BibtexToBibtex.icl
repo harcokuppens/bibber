@@ -28,12 +28,12 @@ write_bib_fields [] file
 	= file;
 
 write_bib_field_value field_name field_value file
-	# file = file <<< '\t' <<< field_name <<< " = { ";
+	# file = file <<< '\t' <<< field_name <<< " = {";
 	= write_bib_field_value2 field_value file;
 
 write_bib_field_value2 [s] file
 	# file = write_string 0 s file;
-	= file <<< " }";
+	= file <<< "}";
 write_bib_field_value2 [s:ss] file
 	| size s==0
 		= write_bib_field_value2 ss file;
@@ -41,4 +41,4 @@ write_bib_field_value2 [s:ss] file
 		# file = fwritec ' ' file;
 		= write_bib_field_value2 ss file;
 write_bib_field_value2 [] file
-	= file <<< " }";
+	= file <<< "}";
