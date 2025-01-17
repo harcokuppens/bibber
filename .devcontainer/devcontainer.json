@@ -11,7 +11,8 @@
 		"vscode": {
 			"extensions": [
 				"TOPSoftware.clean-vs-code",
-				"eamodio.gitlens"
+				"eamodio.gitlens",
+                "ms-vscode.live-server"
 			]
 		}
 	},
