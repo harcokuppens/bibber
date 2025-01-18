@@ -96,7 +96,7 @@ Instead of using `nitrile` we can also build with the `clm` tool directly using 
   ./build-clm.bash
   ```
 
-Note, that the same `cleanup.bash` script can be used to also remove build files build with `clm` directly in this clean project.
+Note, that the same `cleanup.bash` script can be used to also remove build files build with `clm` directly in this clean project.  You can also use the `./cleanuprepo.bash` script which next to cleaning up the projecct also does cleanup both the `nitrile-packages` and`./clean/` clean system folders.
 
 Note, that the clean language server, named Eastwood, used in the devcontainer uses the `Eastwood.clm`  configuration file to specify 
 all folder with clean source. If you switch from nitrile build to clm build you also must adapt the source folders from `nitrile-packages/` to `clean/`  in this file. The file already has both setups configured, but one is commented and the other not, so  when switching build system also switch the commenting here.
