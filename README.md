@@ -45,7 +45,7 @@ We can cleanup the project from all build artifacts, so that only its original s
 ./cleanup.bash
 ```
 
-To cleanup the project and also the `nitrile-packages` folder we run:
+To cleanup the project and also the used clean packages in the `nitrile-packages` folder we run:
 
 ```sh
 ./cleanuprepo.bash
