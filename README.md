@@ -24,7 +24,7 @@ and clean yourself:
 
 ## Build bibber
 
-To build bibber with nitrile, first update and fetch the required nitrile packages for the project as specified in `nitrile.yml`:
+To build bibber with nitrile, first update and fetch the required nitrile packages in `./nitrile-packages` folder for the project as specified in `nitrile.yml`:
 
 ```sh
 nitrile update
