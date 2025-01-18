@@ -2,6 +2,7 @@ compiler: cocl
 paths:
   - src
   - src/WrapDebug
+## for nitrile build  (uncomment clean/ entries)
   - nitrile-packages/linux-x64/abc-interpreter/lib
   - nitrile-packages/linux-x64/argenv/lib
   - nitrile-packages/linux-x64/base-lib/lib
@@ -11,4 +12,7 @@ paths:
   - nitrile-packages/linux-x64/category-theory/lib
   - nitrile-packages/linux-x64/containers/lib
   - nitrile-packages/linux-x64/graph-copy/lib
+ ## for direct clm build  (uncomment nitrile-packages/ entries)
+ # - clean/lib/StdEnv/
+ # - clean/lib/ArgEnv/
   
