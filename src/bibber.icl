@@ -9,7 +9,7 @@ import BibtexToHtml;
 import BibtexRawOutput;
 
 import CustomEvalAbort;
-import CustomDebug;
+import CustomDebug; 
 import CustomFileConsole;
 import CustomString;
 import CustomOptions;
@@ -140,7 +140,34 @@ sort_filter_entries  parsed_entries  bib_entries filter_predicates signed_sort_f
 //    main
 //-------------------------------------------------------------------------
 
+usage_msg ::  {#Char};
+usage_msg = "" +++
+"bibber - bibtex tool to sort/filter bibtex and convert to different outputs\n" +++
+"\n" +++
+"usage: bibber  inputfile outputfile [--filter \"field:value,..\"]  [--sort \"[+-]field,..\"]\n" +++
+"                [--output format]  [--latex2html]  [--limit-fields]\n" +++
+"\n" +++
+"where:\n" +++
+"       inputfile:  input filename, if this is \"-\" input is read from stdin\n" +++
+"       outputfile:  output filename, if this is \"-\" input is read from stdin\n" +++
+"       output: output format which can be origbib,ppbib,html,htmlsectioned\n" +++
+"               where htmlsectioned is sectioned on first sort field.\n" +++
+"               If no sortfield is given \"-year\" is used.\n" +++
+"               Default output format is \"origbib\". The origbib format means\n"  +++
+"               outputting the bibtex entries with the original formatting as\n" +++
+"               in the source file. The ppbib format however does output bibtex\n" +++
+"               with pretty printing applied.\n" +++
+"       latex2html: convert field values from latex to html\n" +++
+"       limit-fields: limit output fields. Has no effect on output 'origbib'\n" +++
+"                     which outputs the original bibtex only sorted and filtered.\n" +++
+"\n";
+
+
 write_usage file
+	# file = file <<< usage_msg;
+    = file;
+
+OLDwrite_usage file
 	# file = file <<<
 "bibber - bibtex tool to sort/filter bibtex and convert to different outputs\n" <<<
 "\n" <<<
@@ -224,14 +251,24 @@ format_fields format [entry:entries]
 
 rev_sort fields = (reverse (sort fields));
 
+
 Start :: !*World  -> *World;
 Start w
     # argv = getCommandLine;
     //# testfile="W:\\projects\\systeembeheer_afdeling\\publications\\mbsd-bib\\tool\\test\\good.bib";
     //# argv = {# "prog" , testfile , "-", "--sort", "-year,+author" , "--filter", "author=luc,fyear=2008"};
+
+    // next line forgets the options; you should first filter the options out
+    // TODO:  split_options_positional_args :: argv -> options pos_args
+    //        this allows options everywhere on the line
     | size argv < 3
-        # stderr = write_usage stderr;
+        //# stderr = write_usage stderr;
+        # stderr = stderr <<< usage_msg;
         = abort "" <--- stderr;
+        // 1. the code '"" <--- stderr' evaluates to '""' but during evaluation it forces evaluation of stderr
+        //    and when stderr is evaluated it prints its content to stderr output channel
+        // 2. abort "" exits program with error 255(general failure) and prints "" to stdout 
+ 
         //= errorAbort "usage: bibber <input_bibtex_file> <output_bibtex_file>";
 
     // cmdline arguments handling
@@ -266,9 +303,9 @@ Start w
 
     // parse raw entries into parsed entries
     # parsed_entries = parse_entries entries [];
-    //parse_entries :: ![(Int,{#Char},[{#Char}])] [({#Char},{#Char})] -> [(Int,{#Char},{#Char},[({#Char},[{#Char}])])];
+    //__parse_entries :: ![(Int,{#Char},[{#Char}])] [({#Char},{#Char})] -> [(Int,{#Char},{#Char},[({#Char},[{#Char}])])];
 
-
+    // format latex strings in bibtex fields to html 
     //#  parsed_entries  = format_fields ( \x -> "-->"+++x+++"<--" ) parsed_entries;
     # parsed_entries  = if latex2html_opt (format_fields str_latex2html parsed_entries) parsed_entries;
 

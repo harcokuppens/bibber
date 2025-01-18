@@ -11,3 +11,4 @@ nitrile-packages
 bin
 .DS_Store
 **/tmp/
+clean/

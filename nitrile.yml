@@ -24,6 +24,8 @@ package:
 clm_options:
   compiler: cocl
   #fusion: GenericFusion
+  heap: 20m
+  stack: 40m
 build:
   application:
     script:
@@ -36,6 +38,20 @@ build:
           # generate_descriptors: true
           # export_local_labels: true
           # strip: false
+          check_indices: true # default true for clm version >= 0.4.22 (-ci option for clm) 
+          # profiling: StackTracing  # (-tst options for clm); default: no profiling  
+          #
+          ## Background info: 
+          ##   src: https://clean-and-itasks.gitlab.io/nitrile//package-configuration/reference/#clm_options
+          ##   src: https://top-software.gitlab.io/clean-lang/profiling/introduction/   
+          ##   
+          ##   If with check_indices enabled (clm option -ci) and you get error 'Run Time Error: index out of range',
+          ##   then enable StackTracing profile (clm option -tst) to  'Generate code for stack tracing'.
+          ##   This makes clean to print the callstack when the error happens, so that you can locate
+          ##   where the error occurs in the code. 
+ 
+                 
+          
 tests:
   compilation:
     compilation: {}

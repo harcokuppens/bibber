@@ -3,18 +3,11 @@ set -e
 script_dir=$(dirname $0)
 cd $script_dir
 
+# cleanup old tests
+\rm -rf test/tmp/
+
 # temporary test output
 mkdir -p test/tmp/
-
-## old test
-#bin/bibber  test/test.bib test/tmp/output.html-format.html --output html --latex2html --limit-fields 
-#cmp test/test.html out.html
-#echo diff $?
-
-# # new test
-# bin/bibber  test/test.bib test/tmp/output.htmlsectioned-format.html  --output htmlsectioned --latex2html --limit-fields 
-# cmp test/output.htmlsectioned-format.html test/tmp/output.htmlsectioned-format.html
-# echo diff $?
 
 test_format() {
     format="$1" 
@@ -24,7 +17,7 @@ test_format() {
 }
 
 # old test
-test_format html
+#test_format html
 
 # new test
-#test_format htmlsectioned
+test_format htmlsectioned

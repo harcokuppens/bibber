@@ -7,9 +7,6 @@ import StdDebug;
 class (<<<<) infixl a :: ![{#Char}] !a -> [{#Char}];
 /*	Overloaded write to file */
 
-//instance <<<< Int;
-//instance <<<< Real
-
 
 instance <<<< {#Char} where {
   (<<<<) :: ![{#Char}] !{#Char} -> [{#Char}];
@@ -53,13 +50,8 @@ concat_strings [] = "";
 str_latex2html :: !{#Char} -> {#Char};
 str_latex2html str
      # str_list = latex2html 0 str [];
-     //# str_list = [ "sfs", "sdf" ];
-     //= toString str_list;
      = concat_strings str_list;
-     //= foldl (+++) "" str_list;
 
-
-//latex2html :: Int (a Char) *File -> .File | Array a Char;
 latex2html :: !Int !String ![String] -> [String];
 latex2html i s file
 	| i<size s

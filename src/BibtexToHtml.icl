@@ -4,10 +4,7 @@ import StdEnv,StdStrictLists,StdOverloadedList;
 import StdDebug;
 
 
-write_string i s file
-	| i<size s
-	   = fwrites s file;
-	= file;
+
 
 //--------------------------------------------------------------------------------------
 //    write html unsorted
@@ -66,17 +63,23 @@ write_entries :: [(.a,.b,.c,[({#.Char},[{#.Char}])])] *File -> .File;
 write_entries [(line_n,entry_kind,entry_name,field_list):entries] file
 //	# file = fwrites "<p>\n" file;
 	# file = fwrites "<li>\n" file;
+	// collect author, title and url fields in fields1,fields2,fields3
 	# (fields1,fields2,fields3,fields) = find_and_remove_fields [] [] [] field_list;
 	# file
+	    //       title   url
 		= case (fields2,fields3) of {
+			// case we have both title and url
 			([title_field],[url_field])
+			    // write author
 				# file = write_fields fields1 file;
 				# file = fwritec '\n' file;
+				// write title and url
 				# file = write_fields_title_and_url title_field url_field file;
 				| isEmpty fields
 					-> file;
 					# file = fwritec '\n' file;
 					-> write_fields fields file;
+			//  else we ignore url, and only write author and title
 			_
 				# fields = fields1++fields2++fields;
 				-> write_fields fields file;
@@ -88,7 +91,8 @@ write_entries [] file
 	= file;
 
 
-
+// collect author, title and url fields in fields1 fields2 fields3  lists
+// remove owner __markedentry and timestamp fields
 find_and_remove_fields fields1 fields2 fields3 [field=:("author",_):fields]
 	# (fields1,fields2,fields3,fields) = find_and_remove_fields fields1 fields2 fields3 fields;
 	= ([field:fields1],fields2,fields3,fields);
@@ -106,31 +110,33 @@ find_and_remove_fields fields1 fields2 fields3 [field=:(field_name,_):fields]
 find_and_remove_fields fields1 fields2 fields3 []
 	= (fields1,fields2,fields3,[]);
 
+// write fields where we deal fields with link special and end with . for last field or title or author fields, else . 
 write_fields [(field_name,field_value)] file
+    //  end with . when last field
 	# file = write_field_value field_name field_value file;
 	= fwritec '.' file;
 write_fields [field=:(field_name,field_value):(next_field_name,next_field_value):fields] file
 	// field with link
 	| next_field_name == "url"+++field_name
 		# file = write_field_value field_name field_value file;
-		  file = fwrites " " file;
+		# file = fwrites " " file;
 		  file = fwrites "<a href=\"" file;
 		  file = write_field_value2 next_field_value file;
 		  file = fwrites "\">" file;
 		  file = fwrites "&uArr;" file;
 		  file = fwrites "</a>" file;
-/*
-		# file = fwrites "<a href=\"" file;
-		  file = write_field_value2 next_field_value file;
-		  file = fwrites "\">" file;
-		  file = write_field_value field_name field_value file;
-		  file = fwrites "</a>" file;
-*/
+		// end with . when last field, or author or title field, else end with ,  
 		| isEmpty fields
 			= fwritec '.' file;
 			# file = fwrites (if (field_name=="author" || field_name=="title") ".\n" ",\n") file;
 			= write_fields fields file;
+	//	missing else case??
+	| otherwise
+		# file = write_field_value field_name field_value file;
+		# file = fwrites (if (field_name=="author" || field_name=="title") ".\n" ",\n") file;
+		= write_fields [(next_field_name, next_field_value):fields] file;
 write_fields [(field_name,field_value):fields] file
+    // end with . when author or title field, else end with , (note: not last field)
 	# file = write_field_value field_name field_value file;
 	# file = fwrites (if (field_name=="author" || field_name=="title") ".\n" ",\n") file;
 	= write_fields fields file;
@@ -320,6 +326,13 @@ format_names names
 			= i;
 }
 
+// 
+write_string i s file
+	| i<size s
+	   = fwrites s file;
+	= file;
+
+// write list of strings space seperated; empty strings in list are skipped
 write_field_value2 [s] file
 	= write_string 0 s file;
 write_field_value2 [s:ss] file
