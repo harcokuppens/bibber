@@ -24,7 +24,7 @@ and clean yourself:
 
 ## Build bibber
 
-To build bibber with nitrile, first update and fetch the required nitrile packages in `./nitrile-packages` folder for the project as specified in `nitrile.yml`:
+To build bibber with nitrile, first install the clean distribution in your project folder in the `./nitrile-packages` folder using the `nitrile` command.  With `nitrile` you can install the clean distribution, update and fetch the required nitrile packages in the `./nitrile-packages` folder as specified in `nitrile.yml` using the commands:
 
 ```sh
 nitrile update
@@ -45,11 +45,13 @@ We can cleanup the project from all build artifacts, so that only its original s
 ./cleanup.bash
 ```
 
-To cleanup the project and also the used clean packages in the `nitrile-packages` folder we run:
+Next to cleaning up the project, above script can also cleanup the clean distribution installed in your project:
 
 ```sh
-./cleanuprepo.bash
+./cleanup.bash all
 ```
+
+One can always reinstall the clean distribution in your project folder in the container by rerunning: `nitrile update; nitrile fetch` 
 
 ## Usage
 
@@ -96,7 +98,8 @@ Instead of using `nitrile` we can also build with the `clm` tool directly using 
   ./build-clm.bash
   ```
 
-Note, that the same `cleanup.bash` script can be used to also remove build files build with `clm` directly in this clean project.  You can also use the `./cleanuprepo.bash` script which next to cleaning up the projecct also does cleanup both the `nitrile-packages` and`./clean/` clean system folders.
+Note, that the same `cleanup.bash` script can be used to also remove build files build with `clm` directly in this clean project.  You can also use run the command `./cleanup.bash all` which next to cleaning up the project also does cleanup the clean distribution installed in your project. One can always reinstall the clean distribution in your project folder in the container by rerunning: `./install-clean.bash` 
+
 
 Note, that the clean language server, named Eastwood, used in the devcontainer uses the `Eastwood.clm`  configuration file to specify 
 all folder with clean source. If you switch from nitrile build to clm build you also must adapt the source folders from `nitrile-packages/` to `clean/`  in this file. The file already has both setups configured, but one is commented and the other not, so  when switching build system also switch the commenting here.

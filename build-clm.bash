@@ -60,8 +60,8 @@ build_script() {
 }
 
 # cleanup old build(s) 
-echo bash $script_dir/clean.bash
-bash $script_dir/clean.bash
+echo bash $script_dir/cleanup.bash
+bash $script_dir/cleanup.bash
 # build project(s)
 for prj_name in  "${projects[@]}"; do
   build_script "$script_dir" "$prj_name" 
