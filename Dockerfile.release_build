@@ -1,13 +1,20 @@
+# Description: 
+#    This Dockerfile is designed to build a Clean 3.1 program for the amd64 architecture.
+#    It uses a multi-stage build process to create a lightweight
+#    final image containing only the compiled binary.    
+#    The build stage uses an older Debian Bullseye base image to make sure the compiled program
+#    is compatible with all current linux distributions. 
+
+#
 # Usage 
 #
-#    export DOCKERFILE=Dockerfile.build_for_amd64_on_debian_bullseye
-#    docker build -f "$DOCKERFILE" --target dist --output dist/ .
+#    docker build -f Dockerfile.release_build --target dist --output dist/ .
 #
-# explantation:
-# - The --output dist/ option extracts the contents of the dist stage (i.e., the binary) to a directory named dist/ on your host machine.
-# where (see below)
+# Explanation:
 # - The build stage compiles the application and places the binary in /build/bin/myapp.
 # - The dist stage copies this binary from /build/bin/ in the build stage to the root directory of the dist stage.
+# - Then finally with the '--output dist/'' option the command extracts the contents of the root folder of the dist 
+#   stage (i.e., the binary) to a directory named dist/ on your host machine.
 #
 #
 # Stage 1: Build stage
