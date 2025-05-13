@@ -28,7 +28,7 @@ ENV PATH="${WORKDIR}/clean/bin:${PATH}"
 
 # copy clean source files and bash build scripts 
 COPY src src 
-COPY build-clm.bash clean.bash .
+COPY build-clm.bash cleanup.bash .
 
 # build clean program with clm
 RUN ./build-clm.bash 
