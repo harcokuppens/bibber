@@ -5,9 +5,9 @@ outputs.
 
 The `bibber` tool is written in the
 [Clean programming language](http://clean.cs.ru.nl/). This repository contains a
-Clean project that uses a clean distribution installed with the `nitrile` tool. As
+Clean project that uses the Clean distribution installed with the `nitrile` tool. As
 alternative it also contains scripts to easily let you build the project with the
-`clm` tool directly.
+'classic' Clean distribution using the `cpm` or `clm` tool.
 
 ## Install
 
@@ -35,6 +35,13 @@ commands:
 ```sh
 nitrile update
 nitrile fetch
+```
+
+After installing nitrile and Clean you can read in environment to also use extra
+nitrile helper applications in `bin-nitrile`:
+
+```sh
+source env.bash
 ```
 
 Then you can (re)build `bibber` with the command:
@@ -101,22 +108,22 @@ We can do this by doing the following steps:
 
   ```sh
   ./install-clean.bash
+  source env.bash
   ```
 
 - build project
 
   - with `cpm` project manager
 
-  ```sh
-  source env.bash
-  cpm bibber.prj
-  ```
+    ```sh
+    cpm bibber.prj
+    ```
 
   - with `clm` using the bash script:
 
-  ```sh
-  ./build-clm.bash
-  ```
+    ```sh
+    ./build-clm.bash
+    ```
 
 Note, that the same `cleanup.bash` script can be used to also remove build files
 build with `nitrile` or `cpm` or `clm` in this clean project. You can also use run
