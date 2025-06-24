@@ -1,0 +1,15 @@
+compiler: cocl
+paths:
+  - src
+  - src/WrapDebug/
+  - clean/lib/StdEnv/  # Standard library for Clean which is by default linked in by clm, but must be specified for eastwood.
+  - clean/lib/StdLib/
+  - clean/lib/ArgEnv/
+  - clean/lib/Platform/ # contains the platform specific libraries, contains a moderner directory library
+  #- clean/lib/Directory/ # is older directory library
+  - clean/lib/TCPIP
+  - clean/lib/Gast
+  
+
+
+  

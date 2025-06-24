@@ -134,7 +134,22 @@ rerunning: `./install-clean.bash`
 
 Note, that the clean language server, named Eastwood, used in the devcontainer uses
 the `Eastwood.clm` configuration file to specify all folder with clean source. If you
-switch from nitrile build to clm build you also must adapt the source folders from
-`nitrile-packages/` to `clean/` in this file. The file already has both setups
-configured, but one is commented and the other not, so when switching build system
-also switch the commenting here.
+switch between the  nitrile  or the 'classic' Clean distribution you must also
+adapt the libraries specified in the the `Eastwood.clm` configuration file  to
+match the distribution. 
+
+For the nitrile Clean distribution create a `Eastwood.clm` configuration  with 
+the command:
+
+    ```sh
+    nitrile-eastwood
+    ```
+
+For the 'classic' Clean distribution create a `Eastwood.clm` configuration  with 
+the command:
+
+    ```sh
+    cp resources/Eastwood.classic.yml Eastwood.yml
+    ```
+
+Note that this repository by default supplies the nitrile's `Eastwood.yml` file.
