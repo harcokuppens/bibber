@@ -23,15 +23,15 @@
       },
       {
         "name": "base-compiler",
-        "version": "4.0.2"
+        "version": "4.1.0"
       },
       {
         "name": "base-lib",
-        "version": "2.12.0"
+        "version": "2.16.2"
       },
       {
         "name": "base-rts",
-        "version": "3.0.2"
+        "version": "3.0.3"
       },
       {
         "name": "base-stdenv",
@@ -47,7 +47,7 @@
       },
       {
         "name": "containers",
-        "version": "2.5.0"
+        "version": "2.8.0"
       },
       {
         "name": "graph-copy",
