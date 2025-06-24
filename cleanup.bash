@@ -55,3 +55,11 @@ if [[ "$1" == "--all" ]]; then
 else
     echo "NOTE: to also cleanup the clean installation in the project run: ./cleanup.bash --all"
 fi
+
+# nitrile cleanup
+if [[ "$1" == "--all" ]]; then
+    # also cleanup clean folder
+    "$script_dir/bin-nitrile/nitrile-cleanup" --all
+else
+    "$script_dir/bin-nitrile/nitrile-cleanup"
+fi
