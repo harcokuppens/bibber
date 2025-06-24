@@ -1,0 +1,63 @@
+Version: 1.0
+Environments
+	Environment
+		EnvironmentName:	StdEnv
+		EnvironmentPaths
+			Path:	{Application}/lib/StdEnv
+		EnvironmentCompiler:	lib/exe/cocl
+		EnvironmentCodeGen:	lib/exe/cg
+		EnvironmentLinker:	/usr/bin/gcc
+		EnvironmentVersion:	920
+		EnvironmentRedirect:	False
+		EnvironmentCompileMethod:	Pers
+		EnvironmentProcessor:	I386
+		Environment64BitProcessor:	True
+	Environment
+		EnvironmentName:	Platform
+		EnvironmentPaths
+			Path:	{Application}/lib/StdEnv
+			Path:	{Application}/lib/Platform
+		EnvironmentCompiler:	lib/exe/cocl:-h 150m
+		EnvironmentCodeGen:	lib/exe/cg
+		EnvironmentLinker:	/usr/bin/gcc
+		EnvironmentVersion:	920
+		EnvironmentRedirect:	False
+		EnvironmentCompileMethod:	Pers
+		EnvironmentProcessor:	I386
+		Environment64BitProcessor:	True
+	Environment
+		EnvironmentName:	Gast
+		EnvironmentPaths
+			Path:	{Application}/lib/StdEnv
+			Path:	{Application}/lib/StdLib
+			Path:	{Application}/lib/Gast
+			Path:	{Application}/lib/Generics
+			Path:	{Application}/lib/MersenneTwister
+			Path:	{Application}/lib/Platform
+		EnvironmentCompiler:	lib/exe/cocl
+		EnvironmentCodeGen:	lib/exe/cg
+		EnvironmentLinker:	/usr/bin/gcc
+		EnvironmentVersion:	920
+		EnvironmentRedirect:	False
+		EnvironmentCompileMethod:	Pers
+		EnvironmentProcessor:	I386
+		Environment64BitProcessor:	True
+	Environment
+		EnvironmentName:	Everything
+		EnvironmentPaths
+			Path:	{Application}/lib/StdEnv
+			Path:	{Application}/lib/StdLib
+			Path:	{Application}/lib/Directory
+			Path:	{Application}/lib/Generics
+			Path:	{Application}/lib/ArgEnv
+			Path:	{Application}/lib/Gast
+			Path:	{Application}/lib/TCPIP
+			Path:	{Application}/lib/MersenneTwister
+		EnvironmentCompiler:	lib/exe/cocl
+		EnvironmentCodeGen:	lib/exe/cg
+		EnvironmentLinker:	/usr/bin/gcc
+		EnvironmentVersion:	920
+		EnvironmentRedirect:	False
+		EnvironmentCompileMethod:	Pers
+		EnvironmentProcessor:	I386
+		Environment64BitProcessor:	True

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+readonly NAME="nitrile-list"
+readonly USAGE="$NAME [-h]"
+readonly DESCRIPTION="list packages installed in the current project (version numbers are listed)"
+readonly MININAL_ARGS=0
+
+PROJECT_DIR=$(nitrile-root) || exit 1
+readonly PROJECT_DIR
+readonly NITRILE_LOCK_FILE="$PROJECT_DIR/nitrile-lock.json"
+
+readonly HELP="
+NAME
+  $NAME - $DESCRIPTION
+
+USAGE 
+  $USAGE
+"
+
+if [[ "$1" == "-h" ]]; then
+    echo "$HELP"
+    exit 0
+fi
+
+# check minimal number of arguments are provided (PACKAGE)
+if [[ "$#" -lt "$MININAL_ARGS" ]]; then
+    echo "usage: $USAGE"
+    exit 0
+fi
+
+# check required commands are installed
+check-required-cmds jq || exit $?
+
+readonly TARGET=$(nitrile-target)
+
+jq -r '.packages."'"$TARGET"'" | .[] | .name + "@" + .version ' "$NITRILE_LOCK_FILE" | sort

@@ -1,0 +1,167 @@
+#!/bin/bash
+
+readonly NAME="nitrile-info"
+readonly USAGE="$NAME [-h] PACKAGE[@VERSION]"
+readonly DESCRIPTION="display information about a package (latest version if version is omitted)"
+readonly MININAL_ARGS=1
+
+readonly NITRILE_DIR="$HOME/.nitrile"
+readonly NITRILE_REGISTRY_FILE="$NITRILE_DIR/registry.json"
+
+PROJECT_DIR=$(nitrile-root) || exit 1
+readonly PROJECT_DIR
+readonly NITRILE_LOCK_FILE="$PROJECT_DIR/nitrile-lock.json"
+
+readonly HELP="
+NAME
+  $NAME - $DESCRIPTION
+
+USAGE 
+  $USAGE
+"
+
+if [[ "$1" == "-h" ]]; then
+    echo "$HELP"
+    exit 0
+fi
+
+# check minimal number of arguments are provided (PACKAGE)
+if [[ "$#" -lt "$MININAL_ARGS" ]]; then
+    echo "usage: $USAGE"
+    exit 0
+fi
+
+# check required commands are installed
+check-required-cmds jq || exit $?
+
+
+input="$1"
+if [[ "$input" == *@* ]]; then
+    #PACKAGE:VERSION
+    package="${input%%@*}"
+    version="${input#*@}"
+else
+    package="$input"
+    version=""
+fi
+
+# check package name exists in registry
+if ! jq -e '.[] |  select( .name == "'"$package"'") | if . == {} then false else  true end ' "$NITRILE_REGISTRY_FILE" >&/dev/null; then
+    echo "ERROR: unknown package '$package' in registry"
+    exit 1
+fi
+latest_version="$(jq -r '.[] |  select( .name == "'"$package"'") | .latest_version' "$NITRILE_REGISTRY_FILE")"
+if [[ "$version" == "" ]]; then
+    # set version to latest version
+    version=$latest_version
+else
+    # check version exists in registry
+    if ! jq -e -r '.[] | select(.name=="'"$package"'") | .versions | keys | index("'"$version"'")' "$NITRILE_REGISTRY_FILE" >&/dev/null; then
+        echo "ERROR: package '$package' does not have version '$version' according registry"
+        exit 1
+    fi
+fi
+
+# get versions
+versions=$(jq -r '.[] |  select( .name == "'"$package"'") | .versions | keys' "$NITRILE_REGISTRY_FILE" | tr -d ' \n[]')
+
+# get all targets for the package in a bash array
+targets=$(jq -r '.[] |  select( .name == "'"$package"'") | .versions | ."'"$version"'"  | .targets | keys ' "$NITRILE_REGISTRY_FILE" | tr -d '",\n[]')
+targets=($targets)
+
+# function to match current target with the available targets in the registry
+# and return the best match
+match_target_label() {
+    local current_target="$1"
+    local -n labels_ref="$2" # Name reference to the array passed as second argument
+
+    IFS='-' read -r cur_os cur_arch <<<"$current_target"
+
+    # First: exact match
+    for label in "${labels_ref[@]}"; do
+        IFS='-' read -r label_os label_arch <<<"$label"
+        if [[ "$label_os" == "$cur_os" && "$label_arch" == "$cur_arch" ]]; then
+            echo "$label"
+            return 0
+        fi
+    done
+
+    # Second: flexible match
+    for label in "${labels_ref[@]}"; do
+        IFS='-' read -r label_os label_arch <<<"$label"
+
+        os_match=false
+        arch_match=false
+
+        # OS match
+        if [[ "$label_os" == "$cur_os" || "$label_os" == "any" ]]; then
+            os_match=true
+        fi
+
+        # ARCH match
+        if [[ "$label_arch" == "$cur_arch" || "$label_arch" == "any" ]]; then
+            arch_match=true
+        elif [[ "$label_arch" == "intel" && ("$cur_arch" == "x86" || "$cur_arch" == "x64") ]]; then
+            arch_match=true
+        fi
+
+        if $os_match && $arch_match; then
+            echo "$label"
+            return 0
+        fi
+    done
+
+    # No match found
+    echo ""
+    return 1
+}
+
+# get the target platform for the nitrile package manager
+# and match it with the available targets in the registry
+readonly TARGET=$(nitrile-target)
+# special cases for MATCHED_TARGET "any-any"(eg. syscall) "any-arm" "any-intel"(eg. base-lib) "linux-any(eg. posix)"
+readonly MATCHED_TARGET=$(match_target_label "$TARGET" targets)
+# get the dependencies and download url for the matched target
+dependencies=$(jq -r '.[] |  select( .name == "'"$package"'") | .versions | ."'"$version"'"  | .targets | ."'"$MATCHED_TARGET"'" | .dependencies  ' "$NITRILE_REGISTRY_FILE")
+downloadUrl=$(jq -r '.[] |  select( .name == "'"$package"'") | .versions | ."'"$version"'"  | .targets | ."'"$MATCHED_TARGET"'" | .url  ' "$NITRILE_REGISTRY_FILE")
+git_ref=$(jq -r '.[] |  select( .name == "'"$package"'") | .versions | ."'"$version"'"  | .targets | ."'"$MATCHED_TARGET"'" | .git_ref  ' "$NITRILE_REGISTRY_FILE")
+
+created=$(jq -r '.[] |  select( .name == "'"$package"'") | .versions | ."'"$version"'"  |  .created  ' "$NITRILE_REGISTRY_FILE")
+created=$(date --date="@$created" +%Y-%m-%d)
+created="$created (yyyy-mm-dd)"
+
+
+# get version number of package installed in the current project
+if  jq -e '.packages."'"$TARGET"'" | .[] |  select( .name == "'"$package"'") | if . == {} then false else  true end ' "$NITRILE_LOCK_FILE" >&/dev/null; then
+    version_installed=$(jq -r '.packages."'"$TARGET"'" | .[] |  select( .name == "'"$package"'") |  .version ' "$NITRILE_LOCK_FILE") 
+else 
+    version_installed="none"
+fi
+
+version_msg="Installed Version: $version_installed\n"
+
+
+
+url=$(jq -r '.[] |  select( .name == "'"$package"'") |  .url ' "$NITRILE_REGISTRY_FILE")
+# example gitUrl: https://gitlab.com/clean-and-itasks/libraries/posix/-/tree/v1.1.2?ref_type=tags
+gitUrl="${url}/-/tree/${git_ref}?ref_type=tags"
+
+# get package info and print it
+jq -r '.[] |  select( .name == "'"$package"'") |  "Package: " +  .name,  "'"$version_msg"'" + "Description: " +  .description, "Repository: " + .url, "Deprecated: " + ( .deprecated | tostring ), "Maintainer: " +  .maintainer, "License: " +  .license  ' "$NITRILE_REGISTRY_FILE"
+
+echo "Repository: $url"
+info="https://clean-lang.org/pkg/$package"
+echo "More info: $info"
+browse="https://cloogle.org/src/#$package/"
+echo "Browse latest source on cloogle: $browse"
+# display version info and dependencies
+echo "Latest Version: $latest_version"
+echo "Versions: $versions"
+echo "Info specific to version $version"
+echo " - created: $created"
+echo " - git url: $gitUrl"
+echo " - download url: $downloadUrl"
+echo " - dependencies: $dependencies"
+
+# https://cloogle.org/src
+# https://cloogle.org/doc

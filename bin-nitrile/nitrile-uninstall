@@ -1,0 +1,52 @@
+#!/bin/bash
+
+readonly NAME="nitrile-uninstall"
+readonly USAGE="$NAME [-h] PACKAGE"
+readonly DESCRIPTION="uninstall a package, the installed version is uninstalled"
+readonly MININAL_ARGS=1
+
+PROJECT_DIR=$(nitrile-root) || exit 1
+readonly PROJECT_DIR
+readonly NITRILE_DIR="$HOME/.nitrile"
+readonly NITRILE_REGISTRY_FILE="$NITRILE_DIR/registry.json"
+readonly NITRILE_YML_FILE="$PROJECT_DIR/nitrile.yml"
+
+readonly HELP="
+NAME
+  $NAME - $DESCRIPTION
+
+USAGE 
+  $USAGE
+  
+  The VERSION is optional, and its value is ignored.
+"
+
+if [[ "$1" == "-h" ]]; then
+    echo "$HELP"
+    exit 0
+fi
+
+# check minimal number of arguments are provided (PACKAGE)
+if [[ "$#" -lt "$MININAL_ARGS" ]]; then
+    echo "usage: $USAGE"
+    echo "note: version is optional, and its value is ignored"
+    exit 0
+fi
+
+# check required commands are installed
+check-required-cmds yq jq || exit $?
+
+package="$1"
+
+# check package name to catch typos
+if ! jq -e '.[] |  select( .name == "'"$package"'") | if . == {} then false else  true end ' "$NITRILE_REGISTRY_FILE" >&/dev/null; then
+    echo "ERROR: unknown package '$package'"
+    exit 1
+fi
+echo "uninstall Package: $package"
+yq -i "del(.dependencies.$package)" "$NITRILE_YML_FILE" 2&>/dev/null 
+cd "$PROJECT_DIR"
+# problem: fetch does not update the lock file when a package is removed and then also does not remove the package from the nitrile-packages/ directory
+# solution (HACK): remove a directory of a required package and then run fetch; on installing the required package by fetch the lock file is updated and synced with the nitrile-packages/ directory
+rm -rf nitrile-packages/linux-x64/base-clm
+nitrile fetch

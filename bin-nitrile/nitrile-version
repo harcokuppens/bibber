@@ -1,0 +1,22 @@
+#!/bin/bash
+
+readonly NAME="nitrile-version"
+readonly USAGE="$NAME [-h]"
+readonly DESCRIPTION="list the version of nitrile and the version of the clean compiler,runtime,lib,stdenv,code-generator,clm"
+readonly HELP="
+NAME
+  $NAME - $DESCRIPTION
+
+USAGE 
+  $USAGE
+"
+
+if [[ "$1" == "-h" ]]; then
+    echo "$HELP"
+    exit 0
+fi
+
+printf "\nnitrile version\n---------------\n"
+nitrile help env | head -1
+printf "\nclean version\n-------------\n"
+nitrile-list | grep -e 'base@' -e base-compiler -e base-lib -e base-rts -e base-code-generator -e base-clm -e base-stdenv

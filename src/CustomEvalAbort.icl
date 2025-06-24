@@ -20,6 +20,9 @@ errorAbort :: {#Char} -> .a;
 errorAbort msg
   	# stderr = stderr <<< msg <<< "\n";    // print msg to stderr
     = abort "" <--- stderr;  // abort with exit code and force eval of stderr
+	// 1. the code '"" <--- stderr' evaluates to '""' but during evaluation it forces evaluation of stderr
+	//    and when stderr is evaluated it prints its content to stderr output channel
+	// 2. abort "" exits program with error 255(general failure) and prints "" to stdout 
 
 
 /*   old implementation dependent on Debug library!

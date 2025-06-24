@@ -1,0 +1,31 @@
+--- clean3.1.orig/Makefile	2021-12-22 16:03:38
++++ clean3.1/Makefile	2025-05-09 16:40:20
+@@ -69,7 +69,7 @@
+ #
+ CLM = \
+ 'CLEANLIB=$(CURRENTDIR)/exe;export CLEANLIB;CLEANPATH=$(CURRENTDIR)/StdEnv;export CLEANPATH;$(CURRENTDIR)/bin/clm'
+-CLMFLAGS = -nw
++CLMFLAGS = "-l -arch -l x86_64 -nw"
+ HTOCLEAN = $(CURRENTDIR)/bin/htoclean
+ FCLC = $(CURRENTDIR)/bin/fclc
+ 
+@@ -193,7 +193,7 @@
+ 	mkdir -p $@/"Clean System Files"
+ 
+ install_Directory: $(INSTALL_LIB_DIR)/Directory
+-	( cd "data/Directory/Clean System Files"; gcc -c -O cDirectory.c -o cDirectory.o )
++	( cd "data/Directory/Clean System Files"; gcc -arch x86_64 -c -O cDirectory.c -o cDirectory.o )
+ 	cp -R data/Directory/* $(INSTALL_LIB_DIR)/Directory
+ 
+ $(INSTALL_LIB_DIR)/MersenneTwister:
+--- clean3.1.orig/data/ArgEnv/Makefile	2021-12-22 16:03:38
++++ clean3.1/data/ArgEnv/Makefile	2025-05-09 16:31:11
+@@ -6,7 +6,7 @@
+ CLM=clm
+ 
+ CC=gcc
+-COPTIONS=-Wall -pedantic -O
++COPTIONS=-Wall -pedantic -O -arch x86_64
+ 
+ printenv : printenv.o ArgEnv.o ArgEnvC.o
+ 	$(CLM) -b -nt printenv -o printenv

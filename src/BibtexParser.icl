@@ -4,7 +4,8 @@ implementation module BibtexParser;
 import StdEnv,StdStrictLists,StdOverloadedList;
 import StdDebug;
 
-// parsing state Record; unique typed value  passed along as environment/state! 
+// Parsing State record (PS); unique typed value passed along as environment/state! 
+// All fields in record are strict. The line field is a string, which is an unboxed array of chars.
 :: *PS = {
 	 line_i :: !Int,     // current index inside current line string (starting with 0; strings are indexed from 0 to size-1) -> better name would be column!
 	 line   :: !{#Char}, // current line string
@@ -371,7 +372,8 @@ where {
 			= ([value_line:values_lines],i,line,lines);
 }
 
-// lineair loop through list of tuples until var_name found ant its matching value
+// lineair loop through list of tuples until var_name found and its matching value
+// if not found then display a message to stderr and return the name itself (no abort done)
 find_variable name [(var_name,var_value):variables]
 	| var_name==name
 		= var_value;

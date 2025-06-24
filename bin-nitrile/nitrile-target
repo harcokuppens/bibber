@@ -1,0 +1,40 @@
+#!/bin/bash
+
+readonly NAME="nitrile-target"
+readonly USAGE="$NAME [-h]"
+readonly DESCRIPTION="determine the target platform for the nitrile package manager"
+readonly HELP="
+NAME
+  $NAME - $DESCRIPTION
+
+USAGE 
+  $USAGE
+"
+
+if [[ "$1" == "-h" ]]; then
+    echo "$HELP"
+    exit 0
+fi
+
+# This script is used to determine the target platform for the nitrile package manager.
+case "$(uname -s)" in
+Linux*) OS=linux ;;
+Darwin*) OS=mac ;;
+CYGWIN* | MINGW* | MSYS*) OS=windows ;;
+*) OS="unknown" ;;
+esac
+
+# Arch Detection
+ARCH=$(uname -m)
+case "$ARCH" in
+x86_64) ARCH="x64" ;;
+i386 | i686) ARCH="x86" ;;
+# registry only has arm 
+# aarch64 | arm64) ARCH="arm64" ;;
+# armv7l | armv6l) ARCH="arm" ;;
+aarch64 | arm64 | armv7l | armv6l) ARCH="arm" ;;
+*) ARCH="unknown" ;;
+esac
+
+#output the target
+printf "$OS-$ARCH\n"

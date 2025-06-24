@@ -1,0 +1,64 @@
+#!/bin/bash
+
+readonly NAME="nitrile-install"
+readonly USAGE="$NAME [-h] PACKAGE[@VERSION]"
+readonly DESCRIPTION="install a package, when version is omitted, the latest version is installed"
+readonly MININAL_ARGS=1
+
+PROJECT_DIR=$(nitrile-root) || exit 1
+readonly PROJECT_DIR
+readonly NITRILE_DIR="$HOME/.nitrile"
+readonly NITRILE_REGISTRY_FILE="$NITRILE_DIR/registry.json"
+readonly NITRILE_YML_FILE="$PROJECT_DIR/nitrile.yml"
+
+readonly HELP="
+NAME
+  $NAME - $DESCRIPTION
+
+USAGE 
+  $USAGE
+"
+
+if [[ "$1" == "-h" ]]; then
+    echo "$HELP"
+    exit 0
+fi
+
+# check minimal number of arguments are provided (PACKAGE)
+if [[ "$#" -lt "$MININAL_ARGS" ]]; then
+    echo "usage: $USAGE"
+    exit 0
+fi
+
+# check required commands are installed
+check-required-cmds yq jq || exit $?
+
+input="$1"
+if [[ "$input" == *@* ]]; then
+    #PACKAGE:VERSION
+    package="${input%%@*}"
+    version="${input#*@}"
+else
+    package="$input"
+    version=""
+fi
+
+# check package name exists in registry
+if ! jq -e '.[] |  select( .name == "'"$package"'") | if . == {} then false else  true end ' "$NITRILE_REGISTRY_FILE" >&/dev/null; then
+    echo "ERROR: unknown package '$package' in registry"
+    exit 1
+fi
+if [[ "$version" == "" ]]; then
+    # get latest version
+    version=$(jq -r '.[] | select( .name == "'"$package"'" ) | .latest_version' "$NITRILE_REGISTRY_FILE")
+else
+    # check version exists in registry
+    if ! jq -e -r '.[] | select(.name=="'"$package"'") | .versions | keys | index("'"$version"'")' "$NITRILE_REGISTRY_FILE" >&/dev/null; then
+        echo "ERROR: package '$package' does not have version '$version' according registry"
+        exit 1
+    fi
+fi
+echo "install Package: $package, Version: $version"
+yq -i ".dependencies.$package=\"^$version\"" "$NITRILE_YML_FILE" 2&>/dev/null 
+cd "$PROJECT_DIR"
+nitrile fetch

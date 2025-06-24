@@ -4,11 +4,13 @@ dist
 Clean\ System\ Files
 *-www
 HelloWorld
-*.prj
 .vscode
 itasks-*.tar.gz
 nitrile-packages
-bin
 .DS_Store
 **/tmp/
 clean/
+# Ignore everything in the 'bin' directory
+bin/*
+# Except the .gitignore file within the 'bin' directory
+!bin/.gitkeep

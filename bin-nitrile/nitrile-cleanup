@@ -1,0 +1,53 @@
+#!/bin/bash
+set -e
+
+USAGE="
+NAME
+   
+    nitrile-cleanup  -  Cleanup project and optionally the clean distribution installed in the nitrile-packages/ folder in the project.
+
+SYNOPSIS
+
+    cleanup [-h|--help|help] [--all]
+
+DESCRIPTION 
+
+    The project contains:
+
+     - local source files
+     - a clean distribution installed in the project folder (in nitrile-packages/ folder)
+
+    Without options cleanup removes only builds from the local source files in the project.
+    With the '--all' option cleanup also removes the clean distribution installed in the project.
+    One can always reinstall the clean distribution in your project folder in the container by 
+    running: nitrile update; nitrile fetch 
+
+    With the option '-h' or '--help' or argument 'help' it displays this usage message.
+
+"
+if [[ "$1" == "-h" || "$1" == "--help" || "$1" == "help" ]]; then
+    echo "$USAGE"
+    exit 0
+fi
+
+echo "INFO: nitrile-cleanup removed builds from the local source files in the project."
+PROJECT_DIR=$(nitrile-root) || exit 1
+rm -rf "$PROJECT_DIR/bin"
+mkdir "$PROJECT_DIR/bin"
+touch "$PROJECT_DIR/bin/.gitkeep"
+
+# cleanup builds in src folders in "Clean System Files" folders
+find "$PROJECT_DIR/src" -name 'Clean System Files' -type d -print0 | xargs -0 -I % rm -rf "%"
+
+if [[ "$1" == "--all" ]]; then
+    # also cleanup clean installation in project (clm or nitrile)
+    rm -rf "$PROJECT_DIR/nitrile-packages"
+
+    echo ""
+    echo "Also removed the nitrile packages installed in the project's folder."
+    echo "One can always reinstall the clean distribution in your project folder in the container by"
+    echo "running: nitrile update; nitrile fetch"
+
+else
+    echo "NOTE: to also cleanup the clean installation in the project run: nitrile-cleanup --all"
+fi

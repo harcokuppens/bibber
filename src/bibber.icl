@@ -262,14 +262,7 @@ Start w
     // TODO:  split_options_positional_args :: argv -> options pos_args
     //        this allows options everywhere on the line
     | size argv < 3
-        //# stderr = write_usage stderr;
-        # stderr = stderr <<< usage_msg;
-        = abort "" <--- stderr;
-        // 1. the code '"" <--- stderr' evaluates to '""' but during evaluation it forces evaluation of stderr
-        //    and when stderr is evaluated it prints its content to stderr output channel
-        // 2. abort "" exits program with error 255(general failure) and prints "" to stdout 
- 
-        //= errorAbort "usage: bibber <input_bibtex_file> <output_bibtex_file>";
+        = errorAbort usage_msg;
 
     // cmdline arguments handling
     # input_filename = argv.[1];

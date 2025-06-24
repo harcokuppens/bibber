@@ -1,0 +1,33 @@
+#!/bin/bash
+
+readonly NAME="nitrile-registry"
+readonly USAGE="$NAME [-h]"
+readonly DESCRIPTION="list packages in the registry(version numbers are listed)"
+readonly MININAL_ARGS=0
+
+readonly NITRILE_DIR="$HOME/.nitrile"
+readonly NITRILE_REGISTRY_FILE="$NITRILE_DIR/registry.json"
+
+readonly HELP="
+NAME
+  $NAME - $DESCRIPTION
+
+USAGE 
+  $USAGE
+"
+
+if [[ "$1" == "-h" ]]; then
+    echo "$HELP"
+    exit 0
+fi
+
+# check minimal number of arguments are provided (PACKAGE)
+if [[ "$#" -lt "$MININAL_ARGS" ]]; then
+    echo "usage: $USAGE"
+    exit 0
+fi
+
+# check required commands are installed
+check-required-cmds jq || exit $?
+
+jq -r '.[] | .name + " - " + .description  + "  (latest version:" + .latest_version + ")"' "$NITRILE_REGISTRY_FILE" | sort

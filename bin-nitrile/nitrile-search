@@ -1,0 +1,38 @@
+#!/bin/bash
+
+readonly NAME="nitrile-search"
+readonly USAGE="$NAME [-h] SEARCH_TERM"
+readonly DESCRIPTION="search for package in the registry using a search term"
+readonly MININAL_ARGS=1
+
+readonly NITRILE_DIR="$HOME/.nitrile"
+readonly NITRILE_REGISTRY_FILE="$NITRILE_DIR/registry.json"
+
+readonly HELP="
+NAME
+  $NAME - $DESCRIPTION
+
+USAGE 
+  $USAGE
+"
+
+if [[ "$1" == "-h" ]]; then
+    echo "$HELP"
+    exit 0
+fi
+
+# check minimal number of arguments are provided (PACKAGE)
+if [[ "$#" -lt "$MININAL_ARGS" ]]; then
+    echo "usage: $USAGE"
+    exit 0
+fi
+
+# check required commands are installed
+check-required-cmds jq || exit $?
+
+
+SEARCH_TERM="$1"
+
+if ! jq -r '.[] | .name + " - " + .description' "$NITRILE_REGISTRY_FILE" | grep -i "$SEARCH_TERM" | sort; then
+    echo "no matches"
+fi

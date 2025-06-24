@@ -1,0 +1,36 @@
+#!/bin/bash
+
+readonly NAME="nitrile-root"
+readonly USAGE="$NAME [-h]"
+readonly DESCRIPTION="determine the root directory of the nitrile project"
+readonly HELP="
+NAME
+  $NAME - $DESCRIPTION
+
+USAGE 
+  $USAGE
+"
+
+if [[ "$1" == "-h" ]]; then
+    echo "$HELP"
+    exit 0
+fi
+
+find_project_root() {
+    local dir="$PWD"
+    while [[ "$dir" != "/" ]]; do
+        if [[ -f "$dir/nitrile.yml" ]]; then
+            echo "$dir"
+            return 0
+        fi
+        dir=$(dirname "$dir")
+    done
+    return 1 # Not found
+}
+
+PROJECT_ROOT=$(find_project_root) || {
+    echo "Error: Could not find nitrile.yml in any parent directory." >&2
+    exit 1
+}
+
+echo "$PROJECT_ROOT"
