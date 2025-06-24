@@ -5,7 +5,9 @@ outputs.
 
 The `bibber` tool is written in the
 [Clean programming language](http://clean.cs.ru.nl/). This repository contains a
-Clean project that uses a clean distribution installed with the `nitrile` tool. As alternative it also contains scripts to easily let you build the project with the `clm` tool directly.
+Clean project that uses a clean distribution installed with the `nitrile` tool. As
+alternative it also contains scripts to easily let you build the project with the
+`clm` tool directly.
 
 ## Install
 
@@ -24,7 +26,11 @@ and clean yourself:
 
 ## Build bibber
 
-To build bibber with nitrile, first install the clean distribution in your project folder in the `./nitrile-packages` folder using the `nitrile` command.  With `nitrile` you can install the clean distribution, update and fetch the required nitrile packages in the `./nitrile-packages` folder as specified in `nitrile.yml` using the commands:
+To build bibber with nitrile, first install the clean distribution in your project
+folder in the `./nitrile-packages` folder using the `nitrile` command. With `nitrile`
+you can install the clean distribution, update and fetch the required nitrile
+packages in the `./nitrile-packages` folder as specified in `nitrile.yml` using the
+commands:
 
 ```sh
 nitrile update
@@ -39,19 +45,22 @@ nitrile build
 
 which builds the binary in `bin/bibber`.
 
-We can cleanup the project from all build artifacts, so that only its original sources remain, by running the cleanup script:
+We can cleanup the project from all build artifacts, so that only its original
+sources remain, by running the cleanup script:
 
 ```sh
 ./cleanup.bash
 ```
 
-Next to cleaning up the project, above script can also cleanup the clean distribution installed in your project:
+Next to cleaning up the project, above script can also cleanup the clean distribution
+installed in your project:
 
 ```sh
-./cleanup.bash all
+./cleanup.bash --all
 ```
 
-One can always reinstall the clean distribution in your project folder in the container by rerunning: `nitrile update; nitrile fetch` 
+One can always reinstall the clean distribution in your project folder in the
+container by rerunning: `nitrile update; nitrile fetch`
 
 ## Usage
 
@@ -81,25 +90,44 @@ where:
 
 ```
 
+## Extra: build of bibber using 'classic' Clean distribution from [https://clean.cs.ru.nl/](https://clean.cs.ru.nl/)
 
-## Extra: clm build of bibber using clean from clean.cs.ru.nl
+Instead of using `nitrile` distibution of Clean, we can also build bibber using
+'classic' Clean distribution from [https://clean.cs.ru.nl/](https://clean.cs.ru.nl/).
 
-Instead of using `nitrile` we can also build with the `clm` tool directly using a clean distribution from the Clean programming language website https://clean.cs.ru.nl/ by doing the following steps:
+We can do this by doing the following steps:
 
 - install Clean from https://clean.cs.ru.nl/ using the bash script
 
-  ```sh 
+  ```sh
   ./install-clean.bash
   ```
 
-- build project with clm using the bash script: 
+- build project
 
-  ```sh 
+  - with `cpm` project manager
+
+  ```sh
+  source env.bash
+  cpm bibber.prj
+  ```
+
+  - with `clm` using the bash script:
+
+  ```sh
   ./build-clm.bash
   ```
 
-Note, that the same `cleanup.bash` script can be used to also remove build files build with `clm` directly in this clean project.  You can also use run the command `./cleanup.bash all` which next to cleaning up the project also does cleanup the clean distribution installed in your project. One can always reinstall the clean distribution in your project folder in the container by rerunning: `./install-clean.bash` 
+Note, that the same `cleanup.bash` script can be used to also remove build files
+build with `nitrile` or `cpm` or `clm` in this clean project. You can also use run
+the command `./cleanup.bash --all` which next to cleaning up the project also does
+cleanup the clean distribution installed in your project. One can always reinstall
+the 'classic' Clean distribution in your project folder in the container by
+rerunning: `./install-clean.bash`
 
-
-Note, that the clean language server, named Eastwood, used in the devcontainer uses the `Eastwood.clm`  configuration file to specify 
-all folder with clean source. If you switch from nitrile build to clm build you also must adapt the source folders from `nitrile-packages/` to `clean/`  in this file. The file already has both setups configured, but one is commented and the other not, so  when switching build system also switch the commenting here.
+Note, that the clean language server, named Eastwood, used in the devcontainer uses
+the `Eastwood.clm` configuration file to specify all folder with clean source. If you
+switch from nitrile build to clm build you also must adapt the source folders from
+`nitrile-packages/` to `clean/` in this file. The file already has both setups
+configured, but one is commented and the other not, so when switching build system
+also switch the commenting here.
