@@ -141,15 +141,15 @@ match the distribution.
 For the nitrile Clean distribution create a `Eastwood.clm` configuration  with 
 the command:
 
-    ```sh
-    nitrile-eastwood
-    ```
+```sh
+nitrile-eastwood
+```
 
 For the 'classic' Clean distribution create a `Eastwood.clm` configuration  with 
 the command:
 
-    ```sh
-    cp resources/Eastwood.classic.yml Eastwood.yml
-    ```
+```sh
+cp resources/Eastwood.classic.yml Eastwood.yml
+```
 
 Note that this repository by default supplies the nitrile's `Eastwood.yml` file.
