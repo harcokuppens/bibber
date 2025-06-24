@@ -14,8 +14,8 @@ alternative it also contains scripts to easily let you build the project with th
 This project can be used using a devcontainer which automatically setups a
 development environment with nitrile and Clean for you in a docker container from
 which you can directly start developing. Look
-[here](https://https://github.com/harcokuppens/clean-nitrile-helloworld) for more
-details how to use the devcontainer in vscode.
+[here](https://github.com/harcokuppens/clean-nitrile-helloworld/blob/main/DevContainer.md)
+for more details how to use the devcontainer in vscode.
 
 However you offcourse can use this project on your local machine by install nitrile
 and clean yourself:
