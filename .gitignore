@@ -1,6 +1,7 @@
 dist
 *.pbc
 *.bc
+*.prp
 Clean\ System\ Files
 *-www
 HelloWorld
