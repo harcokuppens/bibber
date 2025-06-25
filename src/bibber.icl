@@ -9,7 +9,6 @@ import BibtexToHtml;
 import BibtexRawOutput;
 
 import CustomEvalAbort;
-import CustomDebug; 
 import CustomFileConsole;
 import CustomString;
 import CustomOptions;
@@ -17,6 +16,7 @@ import sortByCompares;
 
 import LatexToHtml;
 
+import CustomDebug;
 
 //-------------------------------------------------------------------------
 //
@@ -197,6 +197,8 @@ extra_fields = [ "url","urlpage", "ps","pszip","pdf","doi"];
 custom_url_fields = [ "urlwebpage", "urlps", "urlpszip", "urlpdf", "urldoi", "urlabs"];
 bibber_fields = ["tags"];
 
+output_formats= ["rawbib","origbib","ppbib","html","htmlsectioned","template" ];
+
 limited_fields ::  [{#Char}];
 //limited_fields = [ "author", "year", "title" ];
 limited_fields = standard_fields++extra_fields++custom_url_fields;
@@ -274,7 +276,17 @@ Start w
     # filter_opt = get_long_option  argv "--filter";
     # filter_predicates = split_str filter_opt ',' ;
 
+    // get output type
 	# output_opt = get_long_option  argv "--output";
+    // default is rawbib
+    # output_opt = if ( output_opt == "" ) "rawbib" output_opt
+    // display error and usage message if unsupported type is give
+    | not (isMember output_opt output_formats)
+        # usage_msg = "ERROR: invalid output type: " +++ output_opt  +++ "\n\n" +++ usage_msg;
+        = errorAbort usage_msg;
+
+
+    // boolean opts
 	# limit_fields_opt = isMember "--limit-fields"  [ x \\ x <-: argv];
 	# sort_fields_opt = isMember "--sort-fields"  [ x \\ x <-: argv];
 	# latex2html_opt = isMember "--latex2html"  [ x \\ x <-: argv];
@@ -326,11 +338,10 @@ Start w
               -> write_entries_as_html parsed_entries output_file;
           "htmlsectioned"
               -> write_entries_as_html_sorted_by_field  rev_sort get_field_value "year"   parsed_entries output_file;
-	       _  // rawbib is default, because it does the least formatting changes by default
-              # filteredsorted_raw_entries = string_entries++bib_entries
-              -> write_raw_entries filteredsorted_raw_entries output_file;
-//TODO: check if right value in option is set,
-//      and set default value if options is not set!  => then we can remove _ case above
+          "template"
+              -> write_entries_as_html_sorted_by_field  rev_sort get_field_value "year"   parsed_entries output_file;
+	       _  // output_opt already validated earlier to be one of above values
+              -> errorAbort "should not be reached"
 	  }
 
    /*
