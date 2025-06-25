@@ -253,6 +253,7 @@ format_fields format [entry:entries]
 
 rev_sort fields = (reverse (sort fields));
 
+invalid_output_type output_type = not (isMember output_type output_formats);
 
 Start :: !*World  -> *World;
 Start w
@@ -280,8 +281,8 @@ Start w
 	# output_opt = get_long_option  argv "--output";
     // default is rawbib
     # output_opt = if ( output_opt == "" ) "rawbib" output_opt
-    // display error and usage message if unsupported type is give
-    | not (isMember output_opt output_formats)
+    // display error and usage message if invalid output type is give
+    | invalid_output_type output_opt
         # usage_msg = "ERROR: invalid output type: " +++ output_opt  +++ "\n\n" +++ usage_msg;
         = errorAbort usage_msg;
 
